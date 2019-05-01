@@ -1,0 +1,93 @@
+<html>
+<canvas id="gameCanvas" width="800" height="600"></canvas>
+<script>
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+var circles = new Array();
+  class Circle {
+    step() {
+      if (this.myX < 0 || this.myX > canvas.width) {
+        this.myXV *=-1;
+      }
+      if (this.myY < 0 || this.myY > canvas.height) {
+        this.myYV *=-1;
+      }
+      this.myX += this.myXV;
+      this.myY += this.myYV;
+    }
+
+    X() {
+      return this.myX;
+    }
+    Y() {
+      return this.myY;
+    }
+    XV() {
+      return this.myXV;
+    }
+    YV() {
+      return this.myYV;
+    }
+    drawMe() {
+      colorCircle(this.myX, this.myY, 10, this.myColor);
+    }
+    constructor(x, y, xv, yv) {
+      this.myColor = getRandomColor();
+      this.myX = x;
+      this.myY = y;
+      this.myXV = xv;
+      this.myYV = yv;
+    }
+  }
+
+  window.onload = function() {
+    canvas = document.getElementById('gameCanvas');
+    canvasContext = canvas.getContext('2d');
+    var framesPerSecond = 100;
+    document.addEventListener('keydown', keyPush);
+    setInterval(run, 1000 / framesPerSecond);
+
+  }
+
+  function colorCircle(centerX, centerY, radius, drawColor) {
+    canvasContext.fillStyle = drawColor;
+    canvasContext.beginPath();
+    canvasContext.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
+    canvasContext.fill();
+  }
+
+  function keyPush(event) {
+    if (event.keyCode == 32) {
+      addCircle();
+    }
+  }
+
+  function addCircle() {
+    var xv = Math.random() * 20 - 9;
+    var yv = Math.random() * 20 - 9;
+    var x = gameCanvas.width / 2;
+    var y = gameCanvas.height / 2;
+    let circle = new Circle(x, y, xv, yv);
+    circles.push(circle);
+  }
+
+  function run() {
+    // canvasContext.fillStyle = 'blue';
+    //  canvasContext.fillRect(0,0,canvas.width,canvas.height);
+    // colorCircle(100, 100, 10, 'red');
+
+    for (var i = 0; i < circles.length; i++) {
+      circles[i].drawMe();
+      circles[i].step();
+    }
+
+  }
+</script>
+
+</html>
